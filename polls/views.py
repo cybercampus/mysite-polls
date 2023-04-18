@@ -15,11 +15,15 @@ class IndexView(generic.ListView):
         #return Question.objects.order_by('-pub_date')[:5]
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
-class DetailView(generic.ListView):
+class DetailView(generic.DetailView):
     model = Question
     template_name = 'detail.html'
 
-class ResultsView(generic.ListView):
+    def get_queryset(self):
+        #排除没有发布的问题
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+class ResultsView(generic.DetailView):
     model = Question
     template_name = 'result.html'
 
